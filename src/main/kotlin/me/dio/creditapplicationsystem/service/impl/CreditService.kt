@@ -1,7 +1,7 @@
 
-import entity.Credit
+import Credit
 import me.dio.credit.application.system.repository.CreditRepository
-import service.ICreditService
+import ICreditService
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -10,7 +10,6 @@ class CreditService(
   private val creditRepository: CreditRepository,
   private val customerService: CustomerService
 ): ICreditService {
-
     override fun save(credit: Credit): Credit {
       credit.apply{
         customer = customerService.findById(credit.customer?.id!!)
@@ -28,7 +27,5 @@ class CreditService(
       else throw RuntimeException("Contact admin")
 
     }
-
-
 
 }
