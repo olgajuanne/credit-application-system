@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.HttpStatus
 import CustomerView
 import CustomerUpdataDto
+import jakarta.validation.Valid
 
 
 @RestController
@@ -22,7 +24,7 @@ class CustomerResource (
 ){
 
     @PostMapping
-    fun saveCustomer(@RequestBody customerDto: CustomerDto): ResponseEntity<String> {
+    fun saveCustomer(@RequestBody @Valid customerDto: CustomerDto): ResponseEntity<String> {
         val savedCustomer = this.customerService.save(customerDto.toEntity())
         return ResponseEntity.status(HttpStatus.CREATED).body("Customer ${savedCustomer.email} saved!")
     }
@@ -34,11 +36,12 @@ class CustomerResource (
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCustomer(@PathVariable id: Long) = this.customerService.delete(id)
 
     @PatchMapping
     fun upadateCustomer(@RequestParam(value = "customerId") id: Long, 
-                        @RequestBody customerUpdataDto: CustomerUpdataDto): ResponseEntity<CustomerView> {
+                        @RequestBody @Valid customerUpdataDto: CustomerUpdataDto): ResponseEntity<CustomerView> {
         val customer: Customer = this.customerService.findById(id)
         val customerToUpdate: Customer = customerUpdataDto.toEntity(customer)
         val customerUpdate: Customer = this.customerService.save(customerToUpdate)
