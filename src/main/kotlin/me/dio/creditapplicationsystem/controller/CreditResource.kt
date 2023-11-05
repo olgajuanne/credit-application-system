@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.HttpStatus
 import java.util.stream.Collectors
 import java.util.UUID
+import jakarta.validation.Valid
 
 @RestController
 @RequestMapping("/api/credits")
@@ -19,7 +20,7 @@ class CreditResource(
 ) {
 
     @PostMapping
-    fun saveCredit(@RequestBody creditDto: CreditDto) : ResponseEntity<String> {
+    fun saveCredit(@RequestBody @Valid creditDto: CreditDto) : ResponseEntity<String> {
       val credit: Credit = this.creditService.save(creditDto.toEntity())
       return ResponseEntity.status(HttpStatus.CREATED)
         .body("Credit ${credit.creditCode} - Customer ${credit.customer?.firstName} saved!")
